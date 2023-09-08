@@ -1,0 +1,42 @@
+
+
+pipeline {
+    agent any 
+    environment {
+	// initialize the variables
+
+		repoPAth = "${gitOwner}/${repoName}"
+		init = "true"
+		repo_user = "SanthoshKumarHN"
+		
+ 		}
+    stages {
+	 stage('InitialiseRepo'){
+            steps {
+		script{
+echo "2"
+		echo "$WORKSPACE"
+		echo "Setup the environment"
+		sh cd "${CUSTOMWORKSPACE}"
+echo "3"
+		sh "mkdir -p ${reponame}"
+		sh chmod 777 "${reponame}"
+		sh "${reponame}/pipelines/scripts/github/initializeRepo.sh"
+            		}
+		}
+        }       
+	stage('Build'){
+            steps {
+                echo "This is build step"
+		//bat "${env.SAG_HOME}/common/lib/ant/bin/ant -DSAGHome=${env.SAG_HOME} -DSAG_CI_HOME=${env.SAG_CI_HOME} -DprojectName=${env.JOB_NAME} build"
+            }
+        }
+        stage('Deploy') {
+            steps {
+		echo "This is deploy step"
+		//bat "${env.SAG_HOME}/common/lib/ant/bin/ant -DSAGHome=${env.SAG_HOME} -DSAG_CI_HOME=${env.SAG_CI_HOME} -DprojectName=${env.JOB_NAME} deploy"
+            }
+        }
+ 	
+    }
+}
